@@ -18,7 +18,7 @@ PLOTS_DIR = os.path.join(RESULTS_DIR, "plots")
 METRICS_FILE = os.path.join(RESULTS_DIR, "metrics.json")
 
 
-def evaluate_models(trained_models, X_test, y_test):
+def evaluate_models(trained_models, X_test, y_test, best_params=None):
     os.makedirs(PLOTS_DIR, exist_ok=True)
 
     metrics = {}
@@ -38,6 +38,7 @@ def evaluate_models(trained_models, X_test, y_test):
             "F1": round(float(f1), 4),
             "Precision": round(float(precision), 4),
             "Recall": round(float(recall), 4),
+            "best_params": best_params.get(name, {}) if best_params else {},
         }
 
         # Add model curve to combined ROC plot

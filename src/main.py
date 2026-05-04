@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 
 from data_loader import load_data
 from preprocessor import preprocess
-from models import train_models
+from tuner import tune_models
 from evaluate import evaluate_models
 
 
@@ -29,9 +29,9 @@ def main():
     print("\n[3/4] Preprocessing  (median imputation + standard scaling)")
     X_train_p, X_test_p = preprocess(X_train, X_test)
 
-    print("\n[4/4] Training & evaluating models")
-    trained = train_models(X_train_p, y_train)
-    metrics = evaluate_models(trained, X_test_p, y_test)
+    print("\n[4/4] Hyperparameter tuning & evaluating models  (GridSearchCV, cv=5, scoring=AUC)")
+    trained, best_params = tune_models(X_train_p, y_train)
+    metrics = evaluate_models(trained, X_test_p, y_test, best_params)
 
     print("\n" + "=" * 70)
     print(f"{'Model':<22} {'AUC':>7} {'F1':>7} {'Precision':>10} {'Recall':>8}")
