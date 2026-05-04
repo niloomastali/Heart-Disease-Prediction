@@ -31,7 +31,7 @@ def main():
 
     print("\n[4/4] Hyperparameter tuning & evaluating models  (GridSearchCV, cv=5, scoring=AUC)")
     trained, best_params, cv_scores = tune_models(X_train_p, y_train)
-    metrics = evaluate_models(trained, X_test_p, y_test, best_params, cv_scores)
+    metrics = evaluate_models(trained, X_test_p, y_test, best_params, cv_scores, list(X.columns))
 
     print("\n" + "=" * 82)
     print(f"{'Model':<22} {'CV AUC':>8} {'Test AUC':>9} {'F1':>7} {'Precision':>10} {'Recall':>8}")

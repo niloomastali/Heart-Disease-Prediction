@@ -18,7 +18,7 @@ PLOTS_DIR = os.path.join(RESULTS_DIR, "plots")
 METRICS_FILE = os.path.join(RESULTS_DIR, "metrics.json")
 
 
-def evaluate_models(trained_models, X_test, y_test, best_params=None, cv_scores=None):
+def evaluate_models(trained_models, X_test, y_test, best_params=None, cv_scores=None, feature_names=None):
     os.makedirs(PLOTS_DIR, exist_ok=True)
 
     metrics = {}
@@ -58,6 +58,21 @@ def evaluate_models(trained_models, X_test, y_test, best_params=None, cv_scores=
         safe_name = name.replace(" ", "_")
         fig_cm.savefig(os.path.join(PLOTS_DIR, f"cm_{safe_name}.png"), dpi=120)
         plt.close(fig_cm)
+
+    # Random Forest feature importance
+    if "Random Forest" in trained_models and feature_names is not None:
+        rf = trained_models["Random Forest"]
+        importances = rf.feature_importances_
+        indices = importances.argsort()
+        fig_fi, ax_fi = plt.subplots(figsize=(7, 5))
+        ax_fi.barh(range(len(indices)), importances[indices], align="center")
+        ax_fi.set_yticks(range(len(indices)))
+        ax_fi.set_yticklabels([feature_names[i] for i in indices])
+        ax_fi.set_xlabel("Mean decrease in impurity")
+        ax_fi.set_title("Random Forest — Feature Importances")
+        fig_fi.tight_layout()
+        fig_fi.savefig(os.path.join(PLOTS_DIR, "feature_importance_rf.png"), dpi=150)
+        plt.close(fig_fi)
 
     # Finalise combined ROC figure
     ax.plot([0, 1], [0, 1], "k--", linewidth=0.8, label="Random")
