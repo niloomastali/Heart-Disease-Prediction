@@ -38,6 +38,7 @@ PARAM_GRIDS = {
 def tune_models(X_train, y_train, cv=5):
     tuned = {}
     best_params = {}
+    cv_scores = {}
     for name, model in get_models().items():
         print(f"  Tuning {name}...")
         search = GridSearchCV(
@@ -51,5 +52,6 @@ def tune_models(X_train, y_train, cv=5):
         search.fit(X_train, y_train)
         tuned[name] = search.best_estimator_
         best_params[name] = search.best_params_
+        cv_scores[name] = round(search.best_score_, 4)
         print(f"    -> {search.best_params_}  |  CV AUC: {search.best_score_:.4f}")
-    return tuned, best_params
+    return tuned, best_params, cv_scores

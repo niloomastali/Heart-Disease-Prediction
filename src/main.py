@@ -30,18 +30,19 @@ def main():
     X_train_p, X_test_p = preprocess(X_train, X_test)
 
     print("\n[4/4] Hyperparameter tuning & evaluating models  (GridSearchCV, cv=5, scoring=AUC)")
-    trained, best_params = tune_models(X_train_p, y_train)
-    metrics = evaluate_models(trained, X_test_p, y_test, best_params)
+    trained, best_params, cv_scores = tune_models(X_train_p, y_train)
+    metrics = evaluate_models(trained, X_test_p, y_test, best_params, cv_scores)
 
-    print("\n" + "=" * 70)
-    print(f"{'Model':<22} {'AUC':>7} {'F1':>7} {'Precision':>10} {'Recall':>8}")
-    print("-" * 70)
+    print("\n" + "=" * 82)
+    print(f"{'Model':<22} {'CV AUC':>8} {'Test AUC':>9} {'F1':>7} {'Precision':>10} {'Recall':>8}")
+    print("-" * 82)
     for name, m in metrics.items():
+        cv = m["CV_AUC"] if m["CV_AUC"] is not None else float("nan")
         print(
-            f"{name:<22} {m['AUC']:>7.4f} {m['F1']:>7.4f} "
+            f"{name:<22} {cv:>8.4f} {m['AUC']:>9.4f} {m['F1']:>7.4f} "
             f"{m['Precision']:>10.4f} {m['Recall']:>8.4f}"
         )
-    print("=" * 70)
+    print("=" * 82)
     print("\nDone.")
 
 
